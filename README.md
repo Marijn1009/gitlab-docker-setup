@@ -49,11 +49,24 @@ Then figure out which linux image to use. I want CentOS or similar, because it i
 
 #### Start the container
 
+In Git Bash:
+
 ```bash
 docker pull rockylinux/rockylinux
 
-winpty docker run -it --name my-rockylinux rockylinux/rockylinux
+winpty docker run -it --name my-rockylinux -p 8000:8000 rockylinux/rockylinux
 ```
+Now the rockylinux terminal opens. Linux is ready to use and experiment with. 
 
+#### Setup user management
+
+This can also be done in a dockerfile.
+
+```bash
+dnf -y install sudo
+adduser mverhaeg
+echo "mverhaeg ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+su mverhaeg
+```
 
 
