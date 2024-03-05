@@ -69,4 +69,31 @@ echo "mverhaeg ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 su mverhaeg
 ```
 
+#### Setup self-managed Gitlab
 
+Follow [documentation](https://about.gitlab.com/install/#almalinux).
+
+```bash
+sudo dnf install -y curl policycoreutils openssh-server perl
+
+```
+
+Skip the systemctl steps as Docker doesn't support them by default. Not necessary to setup network access for now. 
+
+```bash
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+sudo EXTERNAL_URL="http://gitlab.mverhaeg.com" dnf install -y gitlab-ce
+```
+
+Install top to see if installation is stuck:
+
+```bash
+# Install top
+sudo dnf -y install procps-ng
+top
+
+# Install htop
+sudo dnf install -y epel-release
+sudo dnf install -y htop
+htop
+```
