@@ -97,3 +97,24 @@ sudo dnf install -y epel-release
 sudo dnf install -y htop
 htop
 ```
+
+### Using VM instead
+Docker was limited in giving the full experience of installing gitlab. And the provided docker image for gitlab doesn't support Windows Docker. So instead create a VM for linux to go forward.
+
+#### Install
+- Install VirtualBox.
+- Download RockyLinux latest version 9. DVD .iso
+
+Problem: When starting up VM it gave glitched out graphics.  
+Solution: Allocate >128MB graphics memory. And when starting VM, press F12 to go into boot select mode, and manually select the .iso file.
+
+#### General
+- Click on VM to give keyboard and mouse control to VM. Press 'host key', default right ctrl, to get out of the VM.
+- Best security practices: 
+   - Lock root account. Only use less-privileged users that can use 'sudo' to do more privileged actions (extra step + logging).
+   - Dissallow ssh root access with password, as it allows brute forcing the password.
+   - Enable KDUMP for when the kernel fails.
+   - Choose security profile CIS intermediate (or basis/advanced. It's a trade-off between security and usability).
+
+Options: Server with GUI.  
+No addiontal software for now.
