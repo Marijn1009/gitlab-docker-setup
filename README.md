@@ -110,6 +110,7 @@ Solution: Allocate >128MB graphics memory. And when starting VM, press F12 to go
 
 #### General
 - Click on VM to give keyboard and mouse control to VM. Press 'host key', default right ctrl, to get out of the VM.
+- Fullscreen: Host + F
 - Best security practices: 
    - Lock root account. Only use less-privileged users that can use 'sudo' to do more privileged actions (extra step + logging).
    - Dissallow ssh root access with password, as it allows brute forcing the password.
@@ -118,3 +119,17 @@ Solution: Allocate >128MB graphics memory. And when starting VM, press F12 to go
 
 Options: Server with GUI.  
 No addiontal software for now.
+
+#### Install Guest Additions 
+This gives  multiple quality of life upgrades, including correct scaling. Select Devices > Insert Guest Additions CD image. 
+
+If there is an error about missing kernel headers, run commands:
+```
+sudo dnf install epel-release
+sudo dnf update
+sudo dnf install kernel-devel kernel-headers gcc make perl
+cd /run/media/$(whoami)/VBOX_GUEST_ADDITIONS
+sudo ./VBoxLinuxAdditions.run
+```
+
+Now select view > Auto-resize guest display. 
