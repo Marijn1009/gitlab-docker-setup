@@ -133,3 +133,17 @@ sudo ./VBoxLinuxAdditions.run
 ```
 
 Now select view > Auto-resize guest display. 
+And select Devices > Shared clip-board > Bidirectional
+
+
+### Gitlab install on VM
+Follow [gitlab install](https://about.gitlab.com/install/#almalinux) for ArmaLinux (RHEL 9 combatible).
+
+Setup DNS:
+- Find ip ```ip addr show```
+- Add DNS entry: ```vim /etc/hosts``` add line such as ```0.0.0.0 gitlab.local```
+
+Reset password according to [here](https://docs.gitlab.com/ee/security/reset_user_password.html). 
+Create new account on login page. Login as root to approve account.
+
+Any time you shutdown the VM and want to start gitlab again: ```sudo gitlab-ctl restart```.
