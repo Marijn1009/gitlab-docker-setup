@@ -1,0 +1,2 @@
+abc123 oldrev123 HEAD
+def456 newrev456 refs/heads/main

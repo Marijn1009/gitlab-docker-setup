@@ -98,7 +98,7 @@ sudo dnf install -y htop
 htop
 ```
 
-### Using VM instead
+## Using VM instead
 Docker was limited in giving the full experience of installing gitlab. And the provided docker image for gitlab doesn't support Windows Docker. So instead create a VM for linux to go forward.
 
 #### Install
@@ -147,3 +147,35 @@ Reset password according to [here](https://docs.gitlab.com/ee/security/reset_use
 Create new account on login page. Login as root to approve account.
 
 Any time you shutdown the VM and want to start gitlab again: ```sudo gitlab-ctl restart```.
+
+## Setup Hooks
+See [GitLab Documentation](https://docs.gitlab.com/ee/administration/server_hooks.html).
+
+See pre-receive-hook.py, this is the hook we want to run. It checks every filename within the commit for whitespace.
+
+```
+mkdir -p custom_hooks/pre-receive.d
+touch custom_hooks/pre-receive.d/pre-receive.py
+vim custom_hooks/pre-receive.d/pre-receive.py
+chmod +x custom_hooks/pre-receive.d/pre-receive.py
+tar -cf custom_hooks.tar custom_hooks
+```
+
+Create a custom_hooks/pre-receive.d/pre-receive.py with the python code. Create tar ```tar -cf custom_hooks.tar custom_hooks```.
+
+Finding storage and path (first command takes long):
+```
+sudo gitlab-rails console
+project = Project.find_by_full_path('mverhaeg/test-project')
+puts project.repository_storage
+puts project.disk_path
+```
+
+Set the hook:
+```
+cat custom_hooks.tar | sudo /opt/gitlab/embedded/bin/gitaly hooks set --storage default --repository @hashed/6b/86/6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b.git --config /var/opt/gitlab/gitaly/config.toml
+```
+
+### Test if it works
+Make commit without whitespace in titles. It should work as normal. Now make commit with whitespace which should give an error.
+
