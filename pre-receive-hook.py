@@ -1,18 +1,34 @@
 #!/usr/bin/env python3
 import sys
 import re
-import os
+import subprocess
 
 def check_filenames():
+    # Read from stdin
     for line in sys.stdin:
         old_rev, new_rev, ref_name = line.strip().split()
-        cmd = f"git diff --name-only {old_rev} {new_rev}"
-        with os.popen(cmd) as stream:
-            for filename in stream:
-                filename = filename.strip()
-                if re.search(r'\s', filename):
-                    print(f"Error: File '{filename}' contains whitespace.")
-                    return 1
+
+        # Use subprocess to call git diff and get the list of changed filenames
+        try:
+            result = subprocess.run(
+                ['git', 'diff', '--name-only', old_rev, new_rev],
+                capture_output=True, text=True, check=True
+            )
+        except subprocess.CalledProcessError as e:
+            # Handle possible git command errors (e.g., bad revisions)
+            print(f"Error running git diff: {e}", file=sys.stderr)
+            return 1
+
+        # Split the output by new lines to get individual filenames
+        filenames = result.stdout.splitlines()
+
+        # Check each filename for whitespaces
+        for filename in filenames:
+            if re.search(r'\s', filename):
+                print(f"Error: File '{filename}' contains whitespace.", file=sys.stderr)
+                return 1
+
+    # If all filenames are valid, return 0
     return 0
 
 if __name__ == "__main__":
