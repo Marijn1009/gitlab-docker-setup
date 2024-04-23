@@ -179,3 +179,27 @@ cat custom_hooks.tar | sudo /opt/gitlab/embedded/bin/gitaly hooks set --storage 
 ### Test if it works
 Make commit without whitespace in titles. It should work as normal. Now make commit with whitespace which should give an error.
 
+### Global hook
+When having many repositories, it is possible to use a global hook that is immediately active for all repositories.
+
+- In gitlab settings ```gitlab.rb```, choose server hook directory.  
+```
+sudo vim /etc/gitlab/gitlab.rb # search for 'custom_hooks_dir'. Uncomment the starting 'gitaly['configuration'] = {' line, the 'hooks: { ... }' lines, and the final '}' line
+```
+- Create hook in ```sudo -i``` session:  
+```
+cd /var/opt/gitlab/gitaly
+mkdir -p custom_hooks/pre-receive.d
+touch custom_hooks/pre-receive.d/pre-receive.py
+vim custom_hooks/pre-receive.d/pre-receive.py # copy pre-receive-hook.py into it
+chmod +x custom_hooks/pre-receive.d/pre-receive.py
+chown git:git custom_hooks/pre-receive.d/pre-receive.py
+```
+
+### Troubleshooting
+Setting up git and keys on linux to test directly in VM:
+- sudo dnf install git
+- Make directory ~/.ssh and files id_rsa and id_rsa.pub. Use chmod 600 to set permissions right.
+- Start key agent with ```eval "$(ssh-agent -s)"``` and add key ```ssh-add ~/.ssh/id_rsa```
+- Clone project: ```git clone git@gitlab.local:mverhaeg/test-project.git```
+
