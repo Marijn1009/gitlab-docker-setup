@@ -19,16 +19,15 @@ def check_filenames():
             print(f"Error running git diff: {e}", file=sys.stderr)
             return 1
 
-        # Split the output by new lines to get individual filenames
         filenames = result.stdout.splitlines()
 
-        # Check each filename for whitespaces
         for filename in filenames:
-            if re.search(r'\s', filename):
-                print(f"Error: File '{filename}' contains whitespace.", file=sys.stderr)
-                return 1
+            if filename.endswith('.sql'):
+                if re.search(r'\s', filename):
+                    print(f"Error: .Filename '{filename}' contains whitespace.", file=sys.stderr)
+                    return 1
 
-    # If all filenames are valid, return 0
+    # Everything valid:
     return 0
 
 if __name__ == "__main__":
