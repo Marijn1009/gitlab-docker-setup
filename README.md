@@ -176,9 +176,6 @@ Set the hook:
 cat custom_hooks.tar | sudo /opt/gitlab/embedded/bin/gitaly hooks set --storage default --repository @hashed/6b/86/6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b.git --config /var/opt/gitlab/gitaly/config.toml
 ```
 
-### Test if it works
-Make commit without whitespace in titles. It should work as normal. Now make commit with whitespace which should give an error.
-
 ### Global hook
 When having many repositories, it is possible to use a global hook that is immediately active for all repositories.
 
@@ -186,7 +183,14 @@ When having many repositories, it is possible to use a global hook that is immed
 ```
 sudo vim /etc/gitlab/gitlab.rb # search for 'custom_hooks_dir'. Uncomment the starting 'gitaly['configuration'] = {' line, the 'hooks: { ... }' lines, and the final '}' line
 ```
-- Create hook in ```sudo -i``` session:  
+Now reconfigure and restart:
+"Reconfiguring GitLab should occur in the event that something in its configuration (/etc/gitlab/gitlab.rb) has changed."
+```
+sudo gitlab-ctl reconfigure
+sudo gitlab-ctl restart
+```
+
+Create the hook in ```sudo -i``` session (no restart needed):  
 ```
 cd /var/opt/gitlab/gitaly
 mkdir -p custom_hooks/pre-receive.d
@@ -195,6 +199,11 @@ vim custom_hooks/pre-receive.d/pre-receive.py # copy pre-receive-hook.py into it
 chmod +x custom_hooks/pre-receive.d/pre-receive.py
 chown git:git custom_hooks/pre-receive.d/pre-receive.py
 ```
+
+### Test if it works
+Make commit without whitespace in titles. It should work as normal. Now make commit with whitespace which should give an error.
+
+And to fix it, just rename the file to not have whitespace and then commit it. The new commit with fixed filenames does work!
 
 ### Troubleshooting
 Setting up git and keys on linux to test directly in VM:
