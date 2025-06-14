@@ -14,7 +14,6 @@ Techniques: Docker, Git, GitLab, Linux, Python, Git Bash, VScode.
 - [Docker guide](https://docs.docker.com/get-started/overview/)
 - [CentOS guide](https://www.geeksforgeeks.org/getting-started-with-centos/)
 - [Gitlab installation on linux](https://docs.gitlab.com/omnibus/installation/index.html)
-- ChatGPT 4
 
 ## Pre-installations
 
